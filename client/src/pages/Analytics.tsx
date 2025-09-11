@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { 
   BarChart, 
   Bar, 
@@ -19,7 +20,9 @@ import {
   Area,
   AreaChart,
 } from 'recharts'
-import { TrendingUp, TrendingDown, Target, BarChart3, Calendar } from "lucide-react"
+import { TrendingUp, TrendingDown, Target, BarChart3, Calendar, Calculator, Zap } from "lucide-react"
+import AdvancedAnalytics from "@/components/AdvancedAnalytics"
+import BettingCalculator from "@/components/BettingCalculator"
 
 // Mock data - todo: remove mock functionality
 const mockAnalytics = {
@@ -102,232 +105,297 @@ export default function Analytics() {
         </div>
       </div>
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Win Rate</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold" data-testid="text-win-rate-analytics">
-              {mockAnalytics.overallStats.winRate}%
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {mockAnalytics.overallStats.totalBets - Math.floor(mockAnalytics.overallStats.totalBets * mockAnalytics.overallStats.winRate / 100)} losses from {mockAnalytics.overallStats.totalBets} bets
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">ROI</CardTitle>
-            <TrendingUp className="h-4 w-4 text-chart-2" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-chart-2" data-testid="text-roi-analytics">
-              {mockAnalytics.overallStats.roi}%
-            </div>
-            <p className="text-xs text-muted-foreground">
-              ${mockAnalytics.overallStats.netProfit} profit on ${mockAnalytics.overallStats.totalStaked} staked
-            </p>
-          </CardContent>
-        </Card>
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="overview" className="flex items-center gap-2">
+            <BarChart3 className="h-4 w-4" />
+            Overview
+          </TabsTrigger>
+          <TabsTrigger value="advanced" className="flex items-center gap-2">
+            <Zap className="h-4 w-4" />
+            Advanced
+          </TabsTrigger>
+          <TabsTrigger value="calculator" className="flex items-center gap-2">
+            <Calculator className="h-4 w-4" />
+            Calculator
+          </TabsTrigger>
+          <TabsTrigger value="insights" className="flex items-center gap-2">
+            <Target className="h-4 w-4" />
+            Insights
+          </TabsTrigger>
+        </TabsList>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Odds</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold" data-testid="text-avg-odds">
-              {mockAnalytics.overallStats.avgOdds}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Average across all bets
-            </p>
-          </CardContent>
-        </Card>
+        <TabsContent value="overview" className="space-y-6">
+          {/* Key Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Win Rate</CardTitle>
+                <Target className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold" data-testid="text-win-rate-analytics">
+                  {mockAnalytics.overallStats.winRate}%
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {mockAnalytics.overallStats.totalBets - Math.floor(mockAnalytics.overallStats.totalBets * mockAnalytics.overallStats.winRate / 100)} losses from {mockAnalytics.overallStats.totalBets} bets
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">ROI</CardTitle>
+                <TrendingUp className="h-4 w-4 text-chart-2" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-chart-2" data-testid="text-roi-analytics">
+                  {mockAnalytics.overallStats.roi}%
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  ${mockAnalytics.overallStats.netProfit} profit on ${mockAnalytics.overallStats.totalStaked} staked
+                </p>
+              </CardContent>
+            </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Best Streak</CardTitle>
-            <TrendingUp className="h-4 w-4 text-chart-2" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-chart-2" data-testid="text-best-streak">
-              {mockAnalytics.overallStats.bestStreak}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Consecutive wins
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Avg Odds</CardTitle>
+                <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold" data-testid="text-avg-odds">
+                  {mockAnalytics.overallStats.avgOdds}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Average across all bets
+                </p>
+              </CardContent>
+            </Card>
 
-      {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Monthly Performance */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Monthly Performance</CardTitle>
-            <CardDescription>Profit and win rate trends over time</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={mockMonthlyPerformance}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Area 
-                  type="monotone" 
-                  dataKey="profit" 
-                  stackId="1"
-                  stroke="hsl(var(--primary))" 
-                  fill="hsl(var(--primary))"
-                  fillOpacity={0.3}
-                  name="Profit ($)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Sport Performance */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Performance by Sport</CardTitle>
-            <CardDescription>ROI and profit breakdown</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={mockSportPerformance}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="sport" />
-                <YAxis />
-                <Tooltip />
-                <Bar 
-                  dataKey="roi" 
-                  fill="hsl(var(--chart-2))" 
-                  name="ROI (%)"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Odds Distribution */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Odds Distribution</CardTitle>
-            <CardDescription>Performance across different odds ranges</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={mockOddsDistribution}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="range" />
-                <YAxis />
-                <Tooltip />
-                <Bar 
-                  dataKey="count" 
-                  fill="hsl(var(--primary))" 
-                  name="Bets"
-                  radius={[4, 4, 0, 0]}
-                />
-                <Bar 
-                  dataKey="profit" 
-                  fill="hsl(var(--chart-2))" 
-                  name="Profit ($)"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Bookmaker Distribution */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Bookmaker Distribution</CardTitle>
-            <CardDescription>Bet volume by sportsbook</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={mockBookmakerPerformance}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  dataKey="value"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                >
-                  {mockBookmakerPerformance.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Detailed Performance Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Sport Performance Breakdown</CardTitle>
-          <CardDescription>Detailed metrics by sport</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left p-2">Sport</th>
-                  <th className="text-right p-2">Bets</th>
-                  <th className="text-right p-2">Wins</th>
-                  <th className="text-right p-2">Win Rate</th>
-                  <th className="text-right p-2">Profit</th>
-                  <th className="text-right p-2">ROI</th>
-                </tr>
-              </thead>
-              <tbody>
-                {mockSportPerformance.map((sport, index) => (
-                  <tr key={index} className="border-b hover:bg-muted/50">
-                    <td className="p-2 font-medium" data-testid={`cell-sport-${index}`}>
-                      {sport.sport}
-                    </td>
-                    <td className="text-right p-2">{sport.bets}</td>
-                    <td className="text-right p-2">{sport.wins}</td>
-                    <td className="text-right p-2">
-                      {((sport.wins / sport.bets) * 100).toFixed(1)}%
-                    </td>
-                    <td className="text-right p-2">
-                      <span className={`font-medium ${
-                        sport.profit > 0 ? "text-chart-2" : "text-destructive"
-                      }`}>
-                        ${sport.profit}
-                      </span>
-                    </td>
-                    <td className="text-right p-2">
-                      <Badge 
-                        variant={sport.roi > 10 ? "default" : sport.roi > 0 ? "secondary" : "destructive"}
-                        data-testid={`badge-roi-${index}`}
-                      >
-                        {sport.roi}%
-                      </Badge>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Best Streak</CardTitle>
+                <TrendingUp className="h-4 w-4 text-chart-2" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-chart-2" data-testid="text-best-streak">
+                  {mockAnalytics.overallStats.bestStreak}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Consecutive wins
+                </p>
+              </CardContent>
+            </Card>
           </div>
-        </CardContent>
-      </Card>
+
+          {/* Charts Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Monthly Performance */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Monthly Performance</CardTitle>
+                <CardDescription>Profit and win rate trends over time</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <AreaChart data={mockMonthlyPerformance}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Area 
+                      type="monotone" 
+                      dataKey="profit" 
+                      stackId="1"
+                      stroke="hsl(var(--primary))" 
+                      fill="hsl(var(--primary))"
+                      fillOpacity={0.3}
+                      name="Profit ($)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            {/* Sport Performance */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Performance by Sport</CardTitle>
+                <CardDescription>ROI and profit breakdown</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={mockSportPerformance}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="sport" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar 
+                      dataKey="roi" 
+                      fill="hsl(var(--chart-2))" 
+                      name="ROI (%)"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            {/* Odds Distribution */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Odds Distribution</CardTitle>
+                <CardDescription>Performance across different odds ranges</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={mockOddsDistribution}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="range" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar 
+                      dataKey="count" 
+                      fill="hsl(var(--primary))" 
+                      name="Bets"
+                      radius={[4, 4, 0, 0]}
+                    />
+                    <Bar 
+                      dataKey="profit" 
+                      fill="hsl(var(--chart-2))" 
+                      name="Profit ($)"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            {/* Bookmaker Distribution */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Bookmaker Distribution</CardTitle>
+                <CardDescription>Bet volume by sportsbook</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={mockBookmakerPerformance}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      dataKey="value"
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {mockBookmakerPerformance.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Detailed Performance Table */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Sport Performance Breakdown</CardTitle>
+              <CardDescription>Detailed metrics by sport</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left p-2">Sport</th>
+                      <th className="text-right p-2">Bets</th>
+                      <th className="text-right p-2">Wins</th>
+                      <th className="text-right p-2">Win Rate</th>
+                      <th className="text-right p-2">Profit</th>
+                      <th className="text-right p-2">ROI</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {mockSportPerformance.map((sport, index) => (
+                      <tr key={index} className="border-b hover:bg-muted/50">
+                        <td className="p-2 font-medium" data-testid={`cell-sport-${index}`}>
+                          {sport.sport}
+                        </td>
+                        <td className="text-right p-2">{sport.bets}</td>
+                        <td className="text-right p-2">{sport.wins}</td>
+                        <td className="text-right p-2">
+                          {((sport.wins / sport.bets) * 100).toFixed(1)}%
+                        </td>
+                        <td className="text-right p-2">
+                          <span className={`font-medium ${
+                            sport.profit > 0 ? "text-chart-2" : "text-destructive"
+                          }`}>
+                            ${sport.profit}
+                          </span>
+                        </td>
+                        <td className="text-right p-2">
+                          <Badge 
+                            variant={sport.roi > 10 ? "default" : sport.roi > 0 ? "secondary" : "destructive"}
+                            data-testid={`badge-roi-${index}`}
+                          >
+                            {sport.roi}%
+                          </Badge>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="advanced">
+          <AdvancedAnalytics />
+        </TabsContent>
+
+        <TabsContent value="calculator">
+          <BettingCalculator />
+        </TabsContent>
+
+        <TabsContent value="insights" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                AI-Powered Insights
+              </CardTitle>
+              <CardDescription>
+                Personalized recommendations based on your betting patterns
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 rounded-lg border bg-chart-2/10">
+                  <h4 className="font-semibold text-chart-2 mb-2">🎯 Strength Identified</h4>
+                  <p className="text-sm">Your football bets show 18.2% ROI - consider increasing allocation to this sport.</p>
+                </div>
+                <div className="p-4 rounded-lg border bg-yellow-500/10">
+                  <h4 className="font-semibold text-yellow-600 mb-2">⚠️ Risk Alert</h4>
+                  <p className="text-sm">High variance detected in weekend betting. Consider reducing stake sizes on Saturdays.</p>
+                </div>
+                <div className="p-4 rounded-lg border bg-blue-500/10">
+                  <h4 className="font-semibold text-blue-600 mb-2">📊 Pattern Found</h4>
+                  <p className="text-sm">Your 3PM bets have 75% win rate. This time slot shows consistent performance.</p>
+                </div>
+                <div className="p-4 rounded-lg border bg-purple-500/10">
+                  <h4 className="font-semibold text-purple-600 mb-2">💡 Optimization Tip</h4>
+                  <p className="text-sm">Kelly Criterion suggests reducing stake size by 15% for better long-term growth.</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
